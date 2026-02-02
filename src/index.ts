@@ -1,10 +1,21 @@
 import express from 'express';
+import cors from 'cors';
+import subjectsRouter from './routes/subjects';
 
 const app = express();
 const port = 8000;
 
 app.use(express.json());
 
+if (!process.env.FRONTEND_URL) throw new Error('FRONTEND_URL is not set in .env file');
+
+app.use(cors({
+    origin: process.env.FRONTEND_URL,
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true
+}))
+
+app.use('/api/subjects', subjectsRouter);
 app.get('/', (req, res) => {
     res.send('Hello from the Express server!');
 });
